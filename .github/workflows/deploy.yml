@@ -130,7 +130,7 @@ jobs:
       with:
         resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
         cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
-        admin: true
+        admin: false
 
     - name: Show Kubeconfig
       run: cat $KUBECONFIG
