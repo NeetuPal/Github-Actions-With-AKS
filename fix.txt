@@ -1,0 +1,16 @@
+Error: AADSTS700213: No matching federated identity record found for presented assertion subject 'repo:NeetuPal/Github-Actions-With-AKS:ref:refs/heads/main'. Check your federated identity credential Subject, Audience and Issuer against the presented assertion. https://learn.microsoft.com/entra/workload-id/workload-identity-federation Trace ID: b8cb59b7-b6c7-4bae-bba4-da361fa0e600 Correlation ID: aa8381a0-6046-44eb-83aa-3c7b0bd3349c Timestamp: 2025-11-30 15:04:42Z
+
+fixed with subject 'repo:NeetuPal/Github-Actions-With-AKS:ref:refs/heads/main'
+
+-------
+
+ERROR: (AuthorizationFailed) The client '***' with object id '4d5717bf-85dc-4770-8754-51784f391bc4' does not have authorization to perform action 'Microsoft.ContainerService/managedClusters/listClusterUserCredential/action' over scope '/subscriptions/***/resourceGroups/***/providers/Microsoft.ContainerService/managedClusters/***' or the scope is invalid. If access was recently granted, please refresh your credentials.
+
+fixed with quotes remove in secrets of gh
+Azure Kubernetes Service Cluster User Role
+
+----------------
+
+ERROR: (AuthorizationFailed) The client '***' with object id '4d5717bf-85dc-4770-8754-51784f391bc4' does not have authorization to perform action 'Microsoft.ContainerService/managedClusters/listClusterAdminCredential/action' over scope '/subscriptions/***/resourceGroups/***/providers/Microsoft.ContainerService/managedClusters/***' or the scope is invalid. If access was recently granted, please refresh your credentials.
+
+Azure Kubernetes Service Cluster Admin Role
