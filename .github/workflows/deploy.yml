@@ -48,8 +48,7 @@ jobs:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    - name: Test AKS access
-      run: kubectl get ns    
+        
 
     - name: Set AKS context
       uses: azure/aks-set-context@v3
@@ -59,6 +58,8 @@ jobs:
         admin: true
     - name: Show Kubeconfig
       run: cat $KUBECONFIG
+    - name: Test AKS access
+      run: kubectl get ns
      
 
     - name: Deploy to AKS
