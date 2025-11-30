@@ -56,6 +56,10 @@ jobs:
       with:
         resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
         cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
+        admin: true
+    - name: Show Kubeconfig
+      run: cat $KUBECONFIG
+     
 
     - name: Deploy to AKS
       run: |
