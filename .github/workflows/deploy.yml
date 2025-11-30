@@ -34,7 +34,9 @@ jobs:
 
     - name: Build Docker Image
       # run: docker build -t $IMAGE_NAME:$TAG .
-      run: docker build -t $IMAGE_NAME:$TAG -f MultiTier-DotNET-MongoDB-K8-main/Dockerfile .
+      # run: docker build -t $IMAGE_NAME:$TAG -f MultiTier-DotNET-MongoDB-K8-main/Dockerfile .
+      run: docker build -t $IMAGE_NAME:$TAG -f MultiTier-DotNET-MongoDB-K8-main/Dockerfile MultiTier-DotNET-MongoDB-K8-main
+
 
 
     - name: Push Docker Image
