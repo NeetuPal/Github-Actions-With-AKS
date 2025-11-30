@@ -1,81 +1,14 @@
-# name: CI/CD to AKS using GitHub OIDC 
-# # correction 12  
-# # on:
-# #   push:
-# #     branches:
-# #       - main
+name: CI/CD to AKS using GitHub OIDC 
+ 
+# on:
+#   push:
+#     branches:
+#       - main
 # on:
 #   push:
 #     branches:
 #       - main
 #   workflow_dispatch:
-
-# permissions:
-#   id-token: write
-#   contents: read
-
-# env:
-#   IMAGE_NAME: neet95402927/dotnet-mongo-crud
-#   TAG: latest
-
-# jobs:
-#   build-and-deploy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - name: Checkout Code
-#       uses: actions/checkout@v3
-
-#     - name: Login to DockerHub
-#       uses: docker/login-action@v2
-#       with:
-#         username: ${{ secrets.DOCKERHUB_USERNAME }}
-#         password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-#     - name: Build Docker Image
-#       # run: docker build -t $IMAGE_NAME:$TAG .
-#       # run: docker build -t $IMAGE_NAME:$TAG -f MultiTier-DotNET-MongoDB-K8-main/Dockerfile .
-#       run: docker build -t $IMAGE_NAME:$TAG -f MultiTier-DotNET-MongoDB-K8-main/Dockerfile MultiTier-DotNET-MongoDB-K8-main
-
-
-
-#     - name: Push Docker Image
-#       run: docker push $IMAGE_NAME:$TAG
-
-#     - name: Azure Login with OIDC
-#       uses: azure/login@v1
-#       with:
-#         client-id: ${{ secrets.AZURE_CLIENT_ID }}
-#         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-#         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-#     - name: List Azure resource groups
-#       run: az group list -o table 
-
-#     - name: Set AKS context
-#       uses: azure/aks-set-context@v3
-#       with:
-#         resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
-#         cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
-#         admin: true
-#     - name: Show Kubeconfig
-#       run: cat $KUBECONFIG
-#     - name: Test AKS access
-#       run: kubectl get ns
-     
-
-#     - name: Deploy to AKS
-#       run: |
-#         kubectl get ns webapps || kubectl create ns webapps
-#         # kubectl apply -f dotnet-mongo-app.yaml -n webapps
-#         kubectl apply -f MultiTier-DotNET-MongoDB-K8-main/dotnet-mongo-app.yaml -n webapps
-
-name: CI/CD to AKS using GitHub OIDC 
-
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
 
 permissions:
   id-token: write
@@ -100,7 +33,11 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build Docker Image
+      # run: docker build -t $IMAGE_NAME:$TAG .
+      # run: docker build -t $IMAGE_NAME:$TAG -f MultiTier-DotNET-MongoDB-K8-main/Dockerfile .
       run: docker build -t $IMAGE_NAME:$TAG -f MultiTier-DotNET-MongoDB-K8-main/Dockerfile MultiTier-DotNET-MongoDB-K8-main
+
+
 
     - name: Push Docker Image
       run: docker push $IMAGE_NAME:$TAG
@@ -111,34 +48,24 @@ jobs:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: List Azure resource groups
+      run: az group list -o table 
 
-    # DIAGNOSTIC: print the service principal object id and role assignments at cluster scope
-    - name: AKS SP diagnostics
-      run: |
-        set -e
-        echo "Azure Client (appId): ${{ secrets.AZURE_CLIENT_ID }}"
-        # get the service principal object id for this appId
-        SP_OBJECT_ID=$(az ad sp show --id ${{ secrets.AZURE_CLIENT_ID }} --query objectId -o tsv || true)
-        echo "Service Principal object id: $SP_OBJECT_ID"
-        echo "Role assignments on the AKS cluster (if any):"
-        az role assignment list --assignee-object-id $SP_OBJECT_ID --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP }}/providers/Microsoft.ContainerService/managedClusters/${{ secrets.AKS_CLUSTER_NAME }} -o table || true
-        echo "Role assignments at resource group level (if cluster-level not present):"
-        az role assignment list --assignee-object-id $SP_OBJECT_ID --scope /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP }} -o table || true
-
-    - name: Set AKS context (admin)
+    - name: Set AKS context
       uses: azure/aks-set-context@v3
       with:
         resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
         cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
-        admin: false
-
+        admin: true
     - name: Show Kubeconfig
       run: cat $KUBECONFIG
-
     - name: Test AKS access
       run: kubectl get ns
+     
 
     - name: Deploy to AKS
       run: |
         kubectl get ns webapps || kubectl create ns webapps
+        # kubectl apply -f dotnet-mongo-app.yaml -n webapps
         kubectl apply -f MultiTier-DotNET-MongoDB-K8-main/dotnet-mongo-app.yaml -n webapps
+
