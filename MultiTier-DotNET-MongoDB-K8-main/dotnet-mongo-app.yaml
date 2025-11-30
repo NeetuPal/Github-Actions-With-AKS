@@ -1,5 +1,5 @@
 # -------------------------------------------------------
-# Secret: MongoDB Root Credentials
+# Secret: MongoDB Root Credentials 
 # -------------------------------------------------------
 apiVersion: v1
 kind: Secret
